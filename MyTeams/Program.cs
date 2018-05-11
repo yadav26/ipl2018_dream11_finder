@@ -194,7 +194,7 @@ namespace MyTeams
             var currentDirectory = System.IO.Directory.GetCurrentDirectory();
 
             string InputFileName = args[0];
-            string OutputFileName = InputFileName+".d11";
+            string OutputFileName = InputFileName+".d11.csv";
             String InputFilePath = currentDirectory + "\\" + InputFileName;
             String OutputFilePath = currentDirectory + "\\" + OutputFileName;
             
@@ -281,25 +281,32 @@ namespace MyTeams
                 writer.AutoFlush = true;
                 foreach (Team team in secondFiveItems)
                 {
-                    string st = team.id.ToString() + ",";
-                    foreach (Members m in team.teamMemberList)
+                    List<Members> tempList = team.teamMemberList.OrderByDescending(s => s.Points).ToList();
+                    string st = team.id.ToString() + ",\n";
+                    foreach (Members m in tempList)
                     {
                         st += m.Name;
                         st += ", ";
                     }
                     st += "\n";
-                    foreach (Members m in team.teamMemberList)
+                    foreach (Members m in tempList)
+                    {
+                        st += m.Skill;
+                        st += ", ";
+                    }
+                    st += "\n";
+                    foreach (Members m in tempList)
                     {
                         st += m.Points;
                         st += ", ";
                     }
-                    st += team.teamMemberList.Sum(s=>s.Points).ToString() +"\n";
-                    foreach (Members m in team.teamMemberList)
+                    st += tempList.Sum(s=>s.Points).ToString() +"\n";
+                    foreach (Members m in tempList)
                     {
                         st += m.Credit;
                         st += ", ";
                     }
-                    st += team.teamMemberList.Sum(s => s.Credit).ToString() + "\n";
+                    st += tempList.Sum(s => s.Credit).ToString() + "\n";
                     writer.WriteLine(st);
 
                     writer.WriteLine("\n");
